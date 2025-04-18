@@ -46,5 +46,5 @@ service /maintenance on ln {
 }
 
 public function maintenancesManagementService() returns error? {
-    io:println("maintenancesManagement service started on port 9090");
+    io:println("maintenancesManagement service started on port: 9090");
 }

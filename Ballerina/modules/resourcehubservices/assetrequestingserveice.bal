@@ -50,5 +50,5 @@ service /assetrequest on ln {
 }
 
 public function AssetRequestService() {
-    io:println("Asset request service work on port 9090");
+    io:println("Asset request service work on port :9090");
 }
