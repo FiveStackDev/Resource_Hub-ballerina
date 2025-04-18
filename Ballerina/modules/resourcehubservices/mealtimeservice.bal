@@ -20,7 +20,7 @@ service /mealtime on ln{
      // MealTime endpoints
     resource function get details() returns MealTime[]|error {
         stream<MealTime, sql:Error?> resultStream = 
-            dbClient->query(`SELECT id, meal_name as mealName, meal_image_url as mealImageUrl FROM MealTimes`);
+            dbClient->query(`SELECT id, meal_name as mealName, meal_image_url as mealImageUrl FROM mealtimes`);
         
         MealTime[] mealtimes = [];
         check resultStream.forEach(function(MealTime meal) {
@@ -34,7 +34,7 @@ service /mealtime on ln{
         io:println("Received meal time data: " + mealTime.toJsonString());
 
         sql:ExecutionResult result = check dbClient->execute(`
-            INSERT INTO MealTimes (meal_name, meal_image_url)
+            INSERT INTO mealtimes (meal_name, meal_image_url)
             VALUES (${mealTime.mealName}, ${mealTime.mealImageUrl})
         `);
 
@@ -51,7 +51,7 @@ service /mealtime on ln{
 
     resource function put details/[int id](@http:Payload MealTime mealTime) returns json|error {
         sql:ExecutionResult result = check dbClient->execute(`
-            UPDATE MealTimes 
+            UPDATE mealtimes 
             SET meal_name = ${mealTime.mealName}, meal_image_url = ${mealTime.mealImageUrl}
             WHERE id = ${id}
         `);
@@ -70,7 +70,7 @@ service /mealtime on ln{
 
     resource function delete details/[int id]() returns json|error {
         sql:ExecutionResult result = check dbClient->execute(`
-            DELETE FROM MealTimes WHERE id = ${id}
+            DELETE FROM mealtimes WHERE id = ${id}
         `);
 
         if result.affectedRowCount == 0 {

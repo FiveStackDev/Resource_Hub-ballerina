@@ -21,7 +21,7 @@ public type Asset record {|
 
 service /asset on ln{
     resource function get details() returns Asset[]|error{
-        stream<Asset, sql:Error?> resultStream = dbClient->query(`SELECT * FROM Assets`);
+        stream<Asset, sql:Error?> resultStream = dbClient->query(`SELECT * FROM assets`);
 
         Asset[] assets = [];
         check resultStream.forEach(function(Asset asset){

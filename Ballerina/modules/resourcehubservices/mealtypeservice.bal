@@ -20,7 +20,7 @@ service /mealtype on ln{
      // MealType endpoints
     resource function get details() returns MealType[]|error {
         stream<MealType, sql:Error?> resultStream = 
-            dbClient->query(`SELECT id, meal_name as mealName, meal_image_url as mealImageUrl FROM MealTypes`);
+            dbClient->query(`SELECT id, meal_name as mealName, meal_image_url as mealImageUrl FROM mealtypes`);
         
         MealType[] mealtypes = [];
         check resultStream.forEach(function(MealType meal) {
@@ -34,7 +34,7 @@ service /mealtype on ln{
         io:println("Received meal type data: " + mealType.toJsonString());
 
         sql:ExecutionResult result = check dbClient->execute(`
-            INSERT INTO MealTypes (meal_name, meal_image_url)
+            INSERT INTO mealtypes (meal_name, meal_image_url)
             VALUES (${mealType.mealName}, ${mealType.mealImageUrl})
         `);
 
@@ -51,7 +51,7 @@ service /mealtype on ln{
 
     resource function put details/[int id](@http:Payload MealType mealType) returns json|error {
         sql:ExecutionResult result = check dbClient->execute(`
-            UPDATE MealTypes 
+            UPDATE mealtypes 
             SET meal_name = ${mealType.mealName}, meal_image_url = ${mealType.mealImageUrl}
             WHERE id = ${id}
         `);
@@ -70,7 +70,7 @@ service /mealtype on ln{
 
     resource function delete details/[int id]() returns json|error {
         sql:ExecutionResult result = check dbClient->execute(`
-            DELETE FROM MealTypes WHERE id = ${id}
+            DELETE FROM mealtypes WHERE id = ${id}
         `);
 
         if result.affectedRowCount == 0 {

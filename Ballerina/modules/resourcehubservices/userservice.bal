@@ -27,7 +27,7 @@ public type User record {|
 service /user on ln {
     resource function get details() returns User[]|error {
         stream<User, sql:Error?> resultStream =
-            dbClient->query(`SELECT * FROM Users`);
+            dbClient->query(`SELECT * FROM users`);
 
         User[] users = [];
         check resultStream.forEach(function(User user) {
@@ -66,7 +66,7 @@ service /user on ln {
 
     resource function delete  details/[int id]() returns json|error {
         sql:ExecutionResult result = check dbClient->execute(`
-            DELETE FROM Users WHERE id = ${id}
+            DELETE FROM users WHERE id = ${id}
         `);
 
         if result.affectedRowCount == 0 {

@@ -23,10 +23,10 @@ service /calander on ln{
     // MealEvents endpoints
     resource function get mealevents/[int userid]() returns MealEvent[]|error {
         stream<MealEvent, sql:Error?> resultStream = 
-            dbClient->query(`SELECT MealEvents.id, meal_time, meal_type, username,user_id, submitted_date, meal_request_date 
-            FROM MealEvents
-            JOIN Users ON MealEvents.user_id = Users.id
-            WHERE MealEvents.user_id = ${userid}`);
+            dbClient->query(`SELECT mealevents.id, meal_time, meal_type, username,user_id, submitted_date, meal_request_date 
+            FROM mealevents
+            JOIN users ON mealevents.user_id = users.id
+            WHERE mealevents.user_id = ${userid}`);
         
         MealEvent[] events = [];
         check resultStream.forEach(function(MealEvent event) {
@@ -38,9 +38,9 @@ service /calander on ln{
 
     resource function get mealevents() returns MealEvent[]|error {
         stream<MealEvent, sql:Error?> resultStream = 
-            dbClient->query(`SELECT MealEvents.id, meal_time, meal_type, username,user_id, submitted_date, meal_request_date 
-            FROM MealEvents
-            JOIN Users ON MealEvents.user_id = Users.id`);
+            dbClient->query(`SELECT mealevents.id, meal_time, meal_type, username,user_id, submitted_date, meal_request_date 
+            FROM mealevents
+            JOIN users ON mealevents.user_id = users.id`);
         
         MealEvent[] events = [];
         check resultStream.forEach(function(MealEvent event) {
@@ -51,7 +51,7 @@ service /calander on ln{
     }
     resource function post mealevents/add(@http:Payload MealEvent event) returns json|error {
         sql:ExecutionResult result = check dbClient->execute(`
-            INSERT INTO MealEvents (meal_time, meal_type, user_id, submitted_date, meal_request_date)
+            INSERT INTO mealevents (meal_time, meal_type, user_id, submitted_date, meal_request_date)
             VALUES (${event.meal_time}, ${event.meal_type}, ${event.user_id}, ${event.submitted_date}, ${event.meal_request_date})
         `);
 
@@ -66,7 +66,7 @@ service /calander on ln{
 
     resource function delete mealevents/[int id]() returns json|error {
         sql:ExecutionResult result = check dbClient->execute(`
-            DELETE FROM MealEvents WHERE id = ${id}
+            DELETE FROM mealevents WHERE id = ${id}
         `);
 
         if result.affectedRowCount == 0 {
