@@ -17,7 +17,7 @@ public type AssetRequest record {|
 
 @http:ServiceConfig {
     cors: {
-        allowOrigins: ["http://localhost:9090", "*"],
+        allowOrigins: ["http://localhost:5173", "*"],
         allowMethods: ["GET", "POST", "DELETE", "OPTION", "PUT"],
         allowHeaders: ["Content-Type"]
     }
@@ -29,6 +29,7 @@ service /assetrequest on ln {
         (`SELECT 
          u.profile_picture_url,
         u.username,
+        a.id,
         a.asset_name,
         a.category,
         ar.borrowed_date,
