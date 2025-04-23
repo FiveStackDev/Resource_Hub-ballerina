@@ -67,6 +67,7 @@ service /assetrequest on ln {
             assetrequest: assetrequest
         };
     }
+
     resource function delete details/[int id]() returns json|error {
         sql:ExecutionResult result = check dbClient->execute(`
             DELETE FROM assetrequests WHERE id = ${id}
@@ -100,8 +101,33 @@ service /assetrequest on ln {
             assetrequest: assetrequest
         };
     }
+        resource function get dueassets() returns AssetRequest[]|error {
+        stream<AssetRequest, sql:Error?> resultstream = dbClient->query
+        (`SELECT 
+         u.profile_picture_url,
+        u.username,
+        a.id,
+        a.asset_name,
+        a.category,
+        ar.borrowed_date,
+        ar.handover_date,
+        DATEDIFF(ar.handover_date, CURDATE()) AS remaining_days,
+        ar.quantity
+        FROM assetrequests ar
+        JOIN users u ON ar.user_id = u.id
+        JOIN assets a ON ar.asset_id = a.id
+        WHERE DATEDIFF(ar.handover_date, CURDATE()) < 0;`);
+
+        AssetRequest[] assetrequests = [];
+
+        check resultstream.forEach(function(AssetRequest assetrequest) {
+            assetrequests.push(assetrequest);
+        });
+
+        return assetrequests;
+    }
+}
 
 public function AssetRequestService() {
     io:println("Asset request service work on port :9090");
-}
 }
