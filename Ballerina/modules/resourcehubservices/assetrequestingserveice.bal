@@ -104,7 +104,7 @@ service /assetrequest on ln {
         resource function get dueassets() returns AssetRequest[]|error {
         stream<AssetRequest, sql:Error?> resultstream = dbClient->query
         (`SELECT 
-         u.profile_picture_url,
+        u.profile_picture_url,
         u.username,
         a.id,
         a.asset_name,
@@ -116,7 +116,9 @@ service /assetrequest on ln {
         FROM assetrequests ar
         JOIN users u ON ar.user_id = u.id
         JOIN assets a ON ar.asset_id = a.id
-        WHERE DATEDIFF(ar.handover_date, CURDATE()) < 0;`);
+        WHERE DATEDIFF(ar.handover_date, CURDATE()) < 0
+        ORDER BY remaining_days ASC;`
+        );
 
         AssetRequest[] assetrequests = [];
 

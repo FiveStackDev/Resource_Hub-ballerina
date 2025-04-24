@@ -51,7 +51,7 @@ resource function post add(@http:Payload Asset asset) returns json|error {
 
      resource function put details/[int id](@http:Payload Asset asset) returns json|error {
         sql:ExecutionResult result = check dbClient->execute(`
-            UPDATE mealtimes 
+            UPDATE assets 
             SET asset_name = ${asset.asset_name}, category = ${asset.category}, quantity = ${asset.quantity}, condition_type = ${asset.condition_type}, location = ${asset.location}
             WHERE id = ${id}
         `);
