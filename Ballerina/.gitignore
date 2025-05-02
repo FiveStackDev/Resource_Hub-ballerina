@@ -1,1 +1,37 @@
+# Ballerina configuration
 Config.toml
+Ballerina.lock
+
+# Build outputs
+/target/
+*.balx
+*.balo
+*.jar
+
+# Logs
+*.log
+
+# IDE configurations
+.idea/
+.vscode/
+*.iml
+.project
+.settings/
+.classpath
+
+# OS specific files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
